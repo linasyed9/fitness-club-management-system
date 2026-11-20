@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Health History{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Health History</h1>
+    <p class="meta">All health metrics are shown in descending order by timestamp.</p>
+    {% if metrics %}
+    <table>
+        <thead>
+            <tr>
+                <th>Metric Type</th>
+                <th>Value</th>
+                <th>Recorded At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for metric in metrics %}
+            <tr>
+                <td>{{ metric.metric_type }}</td>
+                <td>{{ metric.value }}</td>
+                <td>{{ metric.recorded_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No health metrics have been recorded yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

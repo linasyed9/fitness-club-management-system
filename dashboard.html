@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}Member Dashboard{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Member Dashboard</h1>
+    {% if member_name %}
+    <p class="meta">Welcome back, {{ member_name }}.</p>
+    {% else %}
+    <p class="meta">Dashboard data will appear here once records are available.</p>
+    {% endif %}
+</div>
+
+<div class="grid">
+    <div class="card">
+        <h2>Latest Metrics</h2>
+        {% if latest_metrics %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric Type</th>
+                    <th>Most Recent Value</th>
+                    <th>Recorded At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for metric in latest_metrics %}
+                <tr>
+                    <td>{{ metric.metric_type }}</td>
+                    <td>{{ metric.metric_value }}</td>
+                    <td>{{ metric.metric_recorded_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-state">No metrics found.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>Fitness Goals</h2>
+        {% if goals %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Target</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for goal in goals %}
+                <tr>
+                    <td>{{ goal.goal_description }}</td>
+                    <td>{{ goal.target_value }}</td>
+                    <td>{{ goal.goal_created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-state">No active goals found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <h2>Total Group Classes Attended</h2>
+        <p style="font-size: 2rem; margin: 8px 0 0;"><strong>{{ total_classes_attended }}</strong></p>
+    </div>
+
+    <div class="card">
+        <h2>Upcoming Personal Training Sessions</h2>
+        {% if upcoming_sessions %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Trainer</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in upcoming_sessions %}
+                <tr>
+                    <td>{{ session.session_date }}</td>
+                    <td>{{ session.start_time }}</td>
+                    <td>{{ session.end_time }}</td>
+                    <td>{{ session.trainer_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-state">No upcoming personal training sessions.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

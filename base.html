@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Fitness Club{% endblock %}</title>
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --surface: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --primary: #0f62fe;
+            --primary-dark: #0b4ecc;
+            --success-bg: #e8f7ec;
+            --success-text: #1d6b36;
+            --error-bg: #fdecec;
+            --error-text: #a61b1b;
+            --border: #d8e0ea;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .navbar {
+            background: #111827;
+            color: #fff;
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .navbar .brand {
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: #fff;
+        }
+        .navbar .links {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .navbar .links a {
+            color: #e5e7eb;
+            font-size: 0.95rem;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 28px auto;
+            padding: 0 18px 36px;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+        }
+        h1, h2, h3 { margin-top: 0; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+        }
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background: var(--primary-dark); }
+        .btn-secondary {
+            background: #374151;
+        }
+        .btn-secondary:hover {
+            background: #1f2937;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            background: #fff;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: #eff4fb;
+        }
+        .flash {
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            border: 1px solid transparent;
+        }
+        .flash.success {
+            background: var(--success-bg);
+            color: var(--success-text);
+            border-color: #b8e4c1;
+        }
+        .flash.error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            border-color: #f3b8b8;
+        }
+        .empty-state {
+            color: var(--muted);
+            font-style: italic;
+        }
+        .meta {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+        .inline-form {
+            display: inline-block;
+            margin: 0;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #eff4fb;
+            color: #1f3b66;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="brand">Health &amp; Fitness Club Management System</div>
+        <div class="links">
+            {% if session.get('role') == 'member' %}
+                <a href="{{ url_for('member_dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('member_profile') }}">Profile</a>
+                <a href="{{ url_for('member_health_history') }}">Health History</a>
+            {% elif session.get('role') == 'trainer' %}
+                <a href="{{ url_for('trainer_availability') }}">Availability</a>
+                <a href="{{ url_for('trainer_schedule') }}">Schedule</a>
+            {% elif session.get('role') == 'admin' %}
+                <a href="{{ url_for('admin_room_booking') }}">Room Booking</a>
+                <a href="{{ url_for('admin_equipment') }}">Equipment</a>
+            {% endif %}
+
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

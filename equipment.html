@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Equipment Maintenance{% endblock %}
+{% block content %}
+<div class="grid">
+    <div class="card">
+        <h1>Equipment Maintenance</h1>
+        <p class="meta">Log a new issue or update the status of existing equipment.</p>
+        <div class="actions" style="margin-top: 12px;">
+            <a class="tag" href="{{ url_for('admin_equipment') }}">Show all</a>
+            <a class="tag" href="{{ url_for('admin_equipment', filter='non_operational') }}">Show non-operational only</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Log New Maintenance Issue</h2>
+        <form method="post">
+            <input type="hidden" name="action" value="log_issue">
+            <div style="margin-bottom: 12px;">
+                <label for="name">Equipment Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div style="margin-bottom: 16px;">
+                <label for="room_id">Room</label>
+                <select id="room_id" name="room_id" required>
+                    <option value="">Select a room</option>
+                    {% for room in rooms %}
+                    <option value="{{ room.room_id }}">{{ room.room_name }} — {{ room.location }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit">Log Issue</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Equipment List {% if filter_mode == 'non_operational' %}<span class="tag">Filtered</span>{% endif %}</h2>
+    {% if equipment_items %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Room</th>
+                <th>Last Updated</th>
+                <th>Update Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in equipment_items %}
+            <tr>
+                <td>{{ item.equipment_id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.room_name }} ({{ item.location }})</td>
+                <td>{{ item.last_updated }}</td>
+                <td>
+                    <form method="post" class="inline-form">
+                        <input type="hidden" name="action" value="update_status">
+                        <input type="hidden" name="equipment_id" value="{{ item.equipment_id }}">
+                        <select name="status" required>
+                            <option value="operational" {% if item.status == 'operational' %}selected{% endif %}>operational</option>
+                            <option value="under repair" {% if item.status == 'under repair' %}selected{% endif %}>under repair</option>
+                            <option value="out of service" {% if item.status == 'out of service' %}selected{% endif %}>out of service</option>
+                        </select>
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No equipment records match the selected filter.</p>
+    {% endif %}
+</div>
+{% endblock %}

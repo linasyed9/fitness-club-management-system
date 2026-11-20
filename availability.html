@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Trainer Availability{% endblock %}
+{% block content %}
+<div class="grid">
+    <div class="card">
+        <h1>Set Availability</h1>
+        <form method="post">
+            <input type="hidden" name="action" value="add_slot">
+            <div class="form-grid">
+                <div>
+                    <label for="available_date">Available Date</label>
+                    <input type="date" id="available_date" name="available_date" required>
+                </div>
+                <div>
+                    <label for="start_time">Start Time</label>
+                    <input type="time" id="start_time" name="start_time" required>
+                </div>
+                <div>
+                    <label for="end_time">End Time</label>
+                    <input type="time" id="end_time" name="end_time" required>
+                </div>
+            </div>
+            <div style="margin-top: 16px;">
+                <button type="submit">Add Availability Slot</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Existing Slots</h2>
+        {% if slots %}
+            {% for slot in slots %}
+            <form method="post" style="border: 1px solid #ddd; padding: 14px; border-radius: 8px; margin-bottom: 14px;">
+                <input type="hidden" name="availability_id" value="{{ slot.availability_id }}">
+
+                <div class="form-grid">
+                    <div>
+                        <label for="available_date_{{ slot.availability_id }}">Date</label>
+                        <input
+                            type="date"
+                            id="available_date_{{ slot.availability_id }}"
+                            name="available_date"
+                            value="{{ slot.available_date }}"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label for="start_time_{{ slot.availability_id }}">Start</label>
+                        <input
+                            type="time"
+                            id="start_time_{{ slot.availability_id }}"
+                            name="start_time"
+                            value="{{ slot.start_time }}"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label for="end_time_{{ slot.availability_id }}">End</label>
+                        <input
+                            type="time"
+                            id="end_time_{{ slot.availability_id }}"
+                            name="end_time"
+                            value="{{ slot.end_time }}"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px; display: flex; gap: 10px;">
+                    <button type="submit" name="action" value="update_slot">Update</button>
+                    <button type="submit" name="action" value="delete_slot" class="btn-secondary">Delete</button>
+                </div>
+            </form>
+            {% endfor %}
+        {% else %}
+        <p class="empty-state">No availability slots added yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
